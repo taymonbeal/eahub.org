@@ -21,3 +21,4 @@ django-authtools==1.6.0
 django-autoslug==1.9.4
 django-enumfield==1.5
 django-crispy-forms>=1.7.2
+django-extra-views==0.12.0

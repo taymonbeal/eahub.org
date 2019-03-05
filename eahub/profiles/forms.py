@@ -1,6 +1,7 @@
 from authtools.forms import CaseInsensitiveUsernameFieldCreationForm
 from django import forms
 from django.db import models
+import extra_views
 from .models import Profile, CauseArea, GivingPledge
 from ..base.models import User
 
@@ -41,6 +42,11 @@ class EditProfileForm(forms.ModelForm):
             'city_or_town': ('City/Town'),
             'subscribed_to_email_updates': ('Send me email updates about the EA Hub'),
         }
+
+
+class UserEmailInline(extra_views.InlineFormSetFactory):
+    model = User
+    fields = ["email"]
 
 
 class EditProfileCauseAreasForm(forms.ModelForm):

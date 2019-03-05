@@ -2,12 +2,16 @@ import os, logging
 
 import requests
 from django.conf import settings
+from django.core import exceptions
 from django.views import generic
+from django import http
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login
+from django.contrib.auth import mixins as auth_mixins
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.auth.decorators import login_required
+import extra_views
 
 from .models import CauseArea, ExpertiseArea, GivingPledge, Profile, OrganisationalAffiliation
 from .forms import *
@@ -63,25 +67,28 @@ def DownloadView(request):
     return profile.csv(response)
 
 
-@login_required(login_url=reverse_lazy('login'))
-def edit_profile(request):
-    if not hasattr(request.user, 'profile'):
-        raise http.Http404("user has no profile")
-    profile = Profile.objects.get(pk=request.user.profile.id)
-    if request.method == 'POST':
-        form = EditProfileForm(
-            request.POST, request.FILES, instance=request.user.profile)
-        if form.is_valid():
-            profile = form.save(commit=False)
-            profile = profile.geocode()
-            profile.save()
-            return redirect('my_profile')
-    else:
-        form = EditProfileForm(instance=request.user.profile)
-    return render(request, 'eahub/edit_profile.html', {
-            'form': form,
-            'profile': profile
-        })
+class ProfileUpdateView(auth_mixins.LoginRequiredMixin, extra_views.UpdateWithInlinesView):
+    model = Profile
+    form_class = EditProfileForm
+    inlines = [UserEmailInline]
+    template_name = "eahub/edit_profile.html"
+
+    def get_object(self, queryset=None):
+        if queryset is not None:
+            raise exceptions.ImproperlyConfigured("custom queryset not supported")
+        user = self.request.user
+        try:
+            return user.profile
+        except Profile.DoesNotExist:
+            raise http.Http404("user has no profile")
+
+    def get_queryset(self):
+        raise exceptions.ImproperlyConfigured("queryset not applicable")
+
+    def form_valid(self, form):
+        if "city_or_town" in form.changed_data or "country" in form.changed_data:
+            form.instance.geocode()
+        return super().form_valid(form)
 
 
 @login_required(login_url=reverse_lazy('login'))
