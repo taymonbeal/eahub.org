@@ -1,6 +1,7 @@
 import csv
 
 from django.conf import settings
+from django.contrib.contenttypes import fields as contenttypes_fields
 from django.contrib.postgres import fields as postgres_fields
 from django.db import models
 from django import urls
@@ -259,6 +260,7 @@ class Profile(models.Model):
     )
 
     objects = ProfileManager()
+    slugs = contenttypes_fields.GenericRelation(ProfileSlug)
 
     class Meta:
         ordering = ["name", "slug"]
