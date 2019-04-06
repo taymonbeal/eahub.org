@@ -188,6 +188,7 @@ ACCOUNT_SIGNUP_FORM_CLASS = "eahub.profiles.forms.SignupForm"
 ACCOUNT_USER_DISPLAY = "eahub.base.utils.user_display"
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
+SOCIALACCOUNT_PROVIDERS = {"facebook": {"METHOD": "js_sdk", "VERSION": "v3.2"}}
 
 # Django reCAPTCHA
 RECAPTCHA_PRIVATE_KEY = env.str("RECAPTCHA_SECRET_KEY")

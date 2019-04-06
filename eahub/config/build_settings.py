@@ -10,6 +10,8 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "allauth.socialaccount.providers.facebook",
+    "allauth.socialaccount.providers.google",
     "authtools",
     "captcha",
     "crispy_forms",

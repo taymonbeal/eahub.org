@@ -3,6 +3,8 @@
 {% block title %}Login{% endblock %}
 
 {% load crispy_forms_tags %}
+{% load socialaccount %}
+{% load staticfiles %}
 
 {% block form_fields %}
 
@@ -23,6 +25,17 @@
 {% block submit%}Log in{% endblock%}
 
 {% block content_after_form %}
+{% providers_media_js %}
+<div class="panel">
+  Or use your Google or Facebook account to log in.
+  <div>
+    <a href="{% provider_login_url 'google' process='connect' %}"><img src="{% static 'images/google.png' %}" alt="Sign in with Google" width=300></a>
+  </div>
+  <div>
+    <a href="{% provider_login_url 'facebook' method='js_sdk' process='connect' %}"><img src="{% static 'images/facebook.png' %}" alt="Continue with Facebook" width=300></a>
+  </div>
+</div>
+
 <div class="panel animated pulse">
   <div class="alert alert-info hub-info">
       <h2>Login not working?</h2>
