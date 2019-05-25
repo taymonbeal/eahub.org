@@ -80,7 +80,7 @@ LOGGING = {
             "level": "WARNING",
             "class": "applicationinsights.django.LoggingHandler",
         },
-        "console": {"level": "INFO", "class": "logging.StreamHandler"},
+        "console": {"level": "DEBUG", "class": "logging.StreamHandler"},
         "django.server": {
             "level": "INFO",
             "class": "logging.StreamHandler",
@@ -104,6 +104,10 @@ LOGGING = {
         "eahub": {
             "handlers": ["appinsights", "console", "mail_admins"],
             "level": "INFO",
+        },
+        "selenium.webdriver.remote.remote_connection": {
+            "handlers": ["console"],
+            "level": "DEBUG",
         },
     },
 }
