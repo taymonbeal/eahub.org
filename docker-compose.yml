@@ -10,9 +10,10 @@ services:
       - mail
       - webdriver
       - chrome
-      - firefox
+      #- firefox
     ports:
       - 8000:8000
+      - 8003:8003
     volumes:
       - ./eahub/:/code/eahub/
     environment:
@@ -34,7 +35,8 @@ services:
       RECAPTCHA_SECRET_KEY: 6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
       RECAPTCHA_SITE_KEY: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
       SECRET_KEY: development_secret_key
-      WEBDRIVER_BROWSERS: chrome,firefox
+      TEST_SERVER_PORT: '8003'
+      WEBDRIVER_BROWSERS: chrome #,firefox
       WEBDRIVER_URL: http://webdriver:4444/wd/hub
   db:
     image: postgres:10.5
@@ -55,15 +57,22 @@ services:
       - 8001:1080
   webdriver:
     image: selenium/hub:3.141.59-iron
+    environment:
+      GRID_DEBUG: 'true'
   chrome:
-    image: selenium/node-chrome:3.141.59-iron
+    image: selenium/node-chrome-debug:3.141.59-iron
     depends_on:
       - webdriver
+    ports:
+      - 5900:5900
     environment:
+      GRID_DEBUG: 'true'
       HUB_HOST: webdriver
+      VNC_NO_PASSWORD: '1'
   firefox:
     image: selenium/node-firefox:3.141.59-iron
     depends_on:
       - webdriver
     environment:
+      GRID_DEBUG: 'true'
       HUB_HOST: webdriver
