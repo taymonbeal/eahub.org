@@ -7,5 +7,8 @@ pool:
 steps:
   - task: DockerCompose@0
     inputs:
-      action: Run a Docker Compose command
-      dockerComposeCommand: run --use-aliases web pytest
+      action: Run a specific service
+      additionalDockerComposeFiles: docker-compose.test.yml
+      serviceName: web
+      containerCommand: pytest
+      arguments: --use-aliases

@@ -1,14 +1,11 @@
-const path = require('path');
 const webpack = require('webpack');
 const BundleTracker = require('webpack-bundle-tracker');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-  context: __dirname,
-  entry: './eahub/base/static/scripts/main',
+  entry: './scripts/main',
   output: {
-      path: path.resolve('./eahub/base/static/dist'),
-      filename: "[name]-[hash].js",
+      path: '/dist',
+      filename: "[name].js",
   },
   devtool: '#eval-source-map',
   module: {
@@ -81,9 +78,8 @@ module.exports = {
     ]
   },
   plugins: [
-    new BundleTracker({filename: 'eahub/base/static/webpack-stats.json'}),
+      new BundleTracker({path: '/webpack-stats'}),
     new webpack.HotModuleReplacementPlugin(),
-    new CleanWebpackPlugin(),
     new webpack.ProvidePlugin({
       jQuery: 'jquery',
       $: 'jquery'

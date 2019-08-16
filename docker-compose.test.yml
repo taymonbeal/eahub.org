@@ -1,0 +1,30 @@
+services:
+  web:
+    command:
+    depends_on:
+      - db
+      - objstore
+      - cache
+      - mail
+      - webdriver
+      - chrome
+      - firefox
+    environment:
+      BROWSERS: chrome,firefox
+      DJANGO_LIVE_TEST_SERVER_ADDRESS: web
+      PYTEST_ADDOPTS: --driver=Remote
+      SELENIUM_HOST: webdriver
+  webdriver:
+    image: selenium/hub:3.141.59-iron
+  chrome:
+    image: selenium/node-chrome:3.141.59-iron
+    depends_on:
+      - webdriver
+    environment:
+      HUB_HOST: webdriver
+  firefox:
+    image: selenium/node-firefox:3.141.59-iron
+    depends_on:
+      - webdriver
+    environment:
+      HUB_HOST: webdriver

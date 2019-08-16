@@ -1,20 +1,19 @@
 version: '3'
 services:
   web:
-    build: .
-    command: gunicorn --reload --bind=0.0.0.0:8000 eahub.config.wsgi
+    build: ./backend
+    command: ['gunicorn', '--reload', '--bind=0.0.0.0:8000', 'eahub.config.wsgi']
     depends_on:
+      - assets
       - db
       - objstore
       - cache
       - mail
-      - webdriver
-      - chrome
-      - firefox
     ports:
       - 8000:8000
     volumes:
-      - .:/code
+      - ./backend:/backend
+      - webpack-stats:/webpack-stats
     environment:
       APPLICATION_INSIGHTS_INSTRUMENTATION_KEY:
       LEGACY_DATABASE_URL:
@@ -23,28 +22,32 @@ services:
       ADMINS: Local Admin=admin@example.com
       AZURE_CONNECTION_STRING: UseDevelopmentStorage=true;BlobEndpoint=objstore:8002
       AZURE_CONTAINER: media
-      BROWSERS: chrome,firefox
-      CACHE_URL: redis://cache:6379/0
-      DATABASE_URL: postgresql://postgres:development_db_password@db:5432/postgres
+      CACHE_URL: redis://cache
+      DATABASE_URL: postgresql://postgres:development_db_password@db/postgres
       DEBUG: 'True'
-      DJANGO_LIVE_TEST_SERVER_ADDRESS: 'web'
       EMAIL_URL: smtp://mail:1025
       HOSTS: web,localhost
       HTTPS: 'False'
       LEAN_MANAGERS: Local Manager=leanmanager@example.com
-      PYTEST_ADDOPTS: --driver=Remote
       PYTHONDONTWRITEBYTECODE: 'True'
       RECAPTCHA_SECRET_KEY: 6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
       RECAPTCHA_SITE_KEY: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
       SECRET_KEY: development_secret_key
-      SELENIUM_HOST: webdriver
+  assets:
+    build: ./frontend
+    image: eahub.org/assets
+    ports:
+      - 8003:8003
+    volumes:
+      - ./frontend:/frontend
+      - webpack-stats:/webpack-stats
   db:
     image: postgres:10.5
     environment:
       POSTGRES_PASSWORD: development_db_password
   objstore:
     image: arafato/azurite:2.6.5
-    command: node bin/blob --location=/opt/azurite/folder/ --blobPort=8002
+    command: ['node', 'bin/blob', '--location=/opt/azurite/folder', '--blobPort=8002']
     ports:
       - 8002:8002
   cache:
@@ -53,17 +56,5 @@ services:
     image: dockage/mailcatcher:0.6.5
     ports:
       - 8001:1080
-  webdriver:
-    image: selenium/hub:3.141.59-iron
-  chrome:
-    image: selenium/node-chrome:3.141.59-iron
-    depends_on:
-      - webdriver
-    environment:
-      HUB_HOST: webdriver
-  firefox:
-    image: selenium/node-firefox:3.141.59-iron
-    depends_on:
-      - webdriver
-    environment:
-      HUB_HOST: webdriver
+volumes:
+  webpack-stats:

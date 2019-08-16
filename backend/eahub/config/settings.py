@@ -3,7 +3,15 @@ from django.core import exceptions
 from django.utils.safestring import mark_safe
 
 env = environ.Env()
-base_dir = environ.Path(__file__) - 3
+
+# When editing this file, keep the sections ordered as follows:
+# 1. Core settings, by topic within the Core Settings Topical Index in the Django docs
+# 2. Settings for each app built into Django, in alphabetical order
+# 3. Settings for each third-party dependency, in alphabetical order
+# 4. Settings for each app that's part of this project, in alphabetical order
+# Within each section, keep settings in alphabetical order.
+
+# Do not redundantly specify settings if their value is the same as the default.
 
 # Core settings: cache
 CACHES = {
@@ -33,15 +41,13 @@ MANAGERS = ADMINS
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 # Core settings: error reporting
-SILENCED_SYSTEM_CHECKS = ["captcha.recaptcha_test_key_error"]
+SILENCED_SYSTEM_CHECKS = ["captcha.recaptcha_test_key_error"]  # https://pypi.org/project/django-recaptcha/#local-development-and-functional-testing
 
 # Core settings: file uploads
 DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
 
 # Core settings: globalization
-LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
-USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
@@ -122,7 +128,7 @@ X_FRAME_OPTIONS = "DENY"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [base_dir("eahub/templates/")],
+        "DIRS": ["/backend/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -238,18 +244,8 @@ REFERRER_POLICY = "no-referrer-when-downgrade"
 # sorl-thumbnail
 THUMBNAIL_PRESERVE_FORMAT = True
 
-# webpack loader
-
-WEBPACK_LOADER = {
-    "DEFAULT": {
-        "CACHE": not DEBUG,
-        "BUNDLE_DIR_NAME": "dist/",
-        "STATS_FILE": "/static_build/webpack-stats.json",
-        "POLL_INTERVAL": 0.1,
-        "TIMEOUT": None,
-        "IGNORE": [r".+\.hot-update.js", r".+\.map"],
-    }
-}
+# django-webpack-loader
+WEBPACK_LOADER = {"DEFAULT": {"STATS_FILE": "/webpack-stats/webpack-stats.json"}}
 
 # EA Hub
 ADMIN_SITE_HEADER = "EA Hub Staff Portal"

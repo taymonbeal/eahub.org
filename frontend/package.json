@@ -1,23 +1,10 @@
 {
-  "name": "eahub.org",
-  "version": "0.0.0",
-  "description": "EA Hub",
-  "main": "eahub/base/static/scripts/main.js",
+  "private": true,
   "scripts": {
     "test": "babel-node eahub/base/tests/frontend/spec/run.js ",
     "build": "webpack",
     "build-watch": "webpack --watch"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rtcharity/eahub.org.git"
-  },
-  "author": "The EA Hub Authors",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/rtcharity/eahub.org/issues"
-  },
-  "homepage": "https://github.com/rtcharity/eahub.org#readme",
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.4.5",
