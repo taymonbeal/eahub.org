@@ -226,7 +226,13 @@
     <div class="btn-group btn-group-sm text-center" role="group" id="report_profile_abuse_toggle">
       <a href="{% url 'report_abuse_profile' profile.slug  %}"><button type="button" class="btn btn-default"><i class="fa fa-flag"></i> Report abuse</a>
     </div>
+    {% if user.is_superuser %}
+      <div class="btn-group btn-group-sm text-center" role="group" id="report_profile_abuse_toggle">
+        <a href="#"><button type="button" class="btn btn-default"><i class="fa fa-user-slash"></i> Report spam account</a>
+      </div>
+    {% endif %}
   </div>
   {% endif %}
+
 
 {% endblock %}
